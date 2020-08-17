@@ -22,7 +22,7 @@ import (
 	"fmt"
 
 	"github.com/pkg/errors"
-	"k8s.io/apimachinery/pkg/util/sets"
+	"gomodules.xyz/sets"
 )
 
 func VerifyLicense(product, clusterUID string, caCert []byte, license []byte) error {

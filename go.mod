@@ -4,5 +4,5 @@ go 1.15
 
 require (
 	github.com/pkg/errors v0.9.1
-	k8s.io/apimachinery v0.18.8
+	gomodules.xyz/sets v0.0.0-20200817084356-ae6e5e14ce3d
 )
