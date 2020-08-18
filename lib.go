@@ -26,6 +26,8 @@ import (
 	"syscall"
 	"time"
 
+	"go.bytebuilders.dev/license-verifier/info"
+
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/reference"
 
@@ -94,6 +96,8 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 	opt := &LicenseOptions{
 		licenseFile: licenseFile,
 		config:      config,
+		caCert:      []byte(info.LicenseCA),
+		productName: info.ProductName,
 	}
 	// Create Kubernetes client
 	err := opt.createClients()
@@ -107,7 +111,7 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 	}
 
 	// Periodically verify license with 1 hour interval
-	return wait.PollUntil(1*time.Hour, func() (done bool, err error) {
+	return wait.PollImmediateUntil(1*time.Hour, func() (done bool, err error) {
 		log.Infof("Verifying license.......")
 		// Read license from file
 		err = opt.readLicenseFromFile()
@@ -120,7 +124,8 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 			return false, opt.handleLicenseVerificationFailure(err)
 		}
 		log.Infof("Successfully verified license!")
-		return true, nil
+		// return false so that the loop never ends
+		return false, nil
 	}, stopCh)
 }
 
@@ -130,6 +135,8 @@ func VerifyLicense(config *rest.Config, licenseFile string) error {
 	opt := &LicenseOptions{
 		licenseFile: licenseFile,
 		config:      config,
+		caCert:      []byte(info.LicenseCA),
+		productName: info.ProductName,
 	}
 	// Create Kubernetes client
 	err := opt.createClients()
@@ -171,13 +178,9 @@ func (opt *LicenseOptions) readClusterUID() (err error) {
 }
 
 func (opt *LicenseOptions) handleLicenseVerificationFailure(licenseErr error) error {
-	defer func() {
-		// Send interrupt so that all go-routines shut-down gracefully
-		//nolint:errcheck
-		syscall.Kill(syscall.Getpid(), syscall.SIGINT)
-		// Exit the process so that the pod crash.
-		os.Exit(1)
-	}()
+	// Send interrupt so that all go-routines shut-down gracefully
+	//nolint:errcheck
+	defer syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 
 	// Log licenseInfo verification failure
 	log.Errorln("Failed to verify license. Reason: ", licenseErr.Error())
@@ -220,7 +223,7 @@ func (opt *LicenseOptions) handleLicenseVerificationFailure(licenseErr error) er
 		in.Type = core.EventTypeWarning
 		in.Source = core.EventSource{Component: EventSourceLicenseVerifier}
 		in.Reason = EventReasonLicenseVerificationFailed
-		in.Message = fmt.Sprintf("Failed to verify license. Reason: %s", err.Error())
+		in.Message = fmt.Sprintf("Failed to verify license. Reason: %s", licenseErr.Error())
 
 		if in.FirstTimestamp.IsZero() {
 			in.FirstTimestamp = metav1.Now()
