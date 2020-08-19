@@ -3,7 +3,7 @@ module go.bytebuilders.dev/license-verifier/kubernetes
 go 1.14
 
 require (
-	go.bytebuilders.dev/license-verifier v0.2.1
+	go.bytebuilders.dev/license-verifier v0.2.2-0.20200819131757-14b857c78b73
 	golang.org/x/net v0.0.0-20200625001655-4c5254603344 // indirect
 	k8s.io/api v0.18.3
 	k8s.io/apimachinery v0.18.8
