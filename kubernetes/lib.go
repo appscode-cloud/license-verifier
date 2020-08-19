@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -55,7 +56,7 @@ type LicenseEnforcer struct {
 
 // VerifyLicensePeriodically periodically verifies whether the provided license is valid for the current cluster or not.
 func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <-chan struct{}) error {
-	if info.EnforceLicense != "true" {
+	if enforce, err := strconv.ParseBool(info.EnforceLicense); err == nil && enforce {
 		klog.Infoln("License verification skipped")
 		return nil
 	}
@@ -100,7 +101,7 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 
 // VerifyLicense verifies whether the provided license is valid for the current cluster or not.
 func VerifyLicense(config *rest.Config, licenseFile string) error {
-	if info.EnforceLicense != "true" {
+	if enforce, err := strconv.ParseBool(info.EnforceLicense); err == nil && enforce {
 		klog.Infoln("License verification skipped")
 		return nil
 	}
