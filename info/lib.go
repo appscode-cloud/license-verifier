@@ -16,6 +16,8 @@ limitations under the License.
 
 package info
 
+import "strconv"
+
 var (
 	EnforceLicense string
 	LicenseCA      string
@@ -26,3 +28,8 @@ var (
 	ProductName string
 	ProductUID  string
 )
+
+func SkipLicenseVerification() bool {
+	v, _ := strconv.ParseBool(EnforceLicense)
+	return !v
+}
