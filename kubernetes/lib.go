@@ -55,6 +55,11 @@ type LicenseEnforcer struct {
 
 // VerifyLicensePeriodically periodically verifies whether the provided license is valid for the current cluster or not.
 func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <-chan struct{}) error {
+	if !info.EnforceLicense {
+		klog.Infoln("License verification skipped")
+		return nil
+	}
+
 	le := &LicenseEnforcer{
 		licenseFile: licenseFile,
 		config:      config,
@@ -76,7 +81,7 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 
 	// Periodically verify license with 1 hour interval
 	return wait.PollImmediateUntil(1*time.Hour, func() (done bool, err error) {
-		klog.Infof("Verifying license.......")
+		klog.V(8).Infoln("Verifying license.......")
 		// Read license from file
 		err = le.readLicenseFromFile()
 		if err != nil {
@@ -87,7 +92,7 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 		if err != nil {
 			return false, le.handleLicenseVerificationFailure(err)
 		}
-		klog.Infof("Successfully verified license!")
+		klog.Infoln("Successfully verified license!")
 		// return false so that the loop never ends
 		return false, nil
 	}, stopCh)
@@ -95,7 +100,12 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 
 // VerifyLicense verifies whether the provided license is valid for the current cluster or not.
 func VerifyLicense(config *rest.Config, licenseFile string) error {
-	klog.Infof("Verifying license.......")
+	if !info.EnforceLicense {
+		klog.Infoln("License verification skipped")
+		return nil
+	}
+
+	klog.V(8).Infoln("Verifying license.......")
 	le := &LicenseEnforcer{
 		licenseFile: licenseFile,
 		config:      config,
@@ -124,7 +134,7 @@ func VerifyLicense(config *rest.Config, licenseFile string) error {
 	if err != nil {
 		return le.handleLicenseVerificationFailure(err)
 	}
-	klog.Infof("Successfully verified license!")
+	klog.Infoln("Successfully verified license!")
 	return nil
 }
 
