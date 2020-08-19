@@ -17,7 +17,7 @@ limitations under the License.
 package info
 
 var (
-	EnforceLicense bool
+	EnforceLicense string
 	LicenseCA      string
 
 	ProductOwnerName string
