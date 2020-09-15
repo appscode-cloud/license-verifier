@@ -63,14 +63,9 @@ type LicenseEnforcer struct {
 	licenseFile string
 }
 
-// VerifyLicensePeriodically periodically verifies whether the provided license is valid for the current cluster or not.
-func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <-chan struct{}) error {
-	if info.SkipLicenseVerification() {
-		klog.Infoln("License verification skipped")
-		return nil
-	}
-
-	le := &LicenseEnforcer{
+// NewLicenseEnforcer returns a newly created license enforcer
+func NewLicenseEnforcer(config *rest.Config, licenseFile string) *LicenseEnforcer {
+	return &LicenseEnforcer{
 		licenseFile: licenseFile,
 		config:      config,
 		opts: &verifier.Options{
@@ -78,34 +73,6 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 			ProductName: info.ProductName,
 		},
 	}
-	// Create Kubernetes client
-	err := le.createClients()
-	if err != nil {
-		return le.handleLicenseVerificationFailure(err)
-	}
-	// Read cluster UID (UID of the "kube-system" namespace)
-	err = le.readClusterUID()
-	if err != nil {
-		return le.handleLicenseVerificationFailure(err)
-	}
-
-	// Periodically verify license with 1 hour interval
-	return wait.PollImmediateUntil(1*time.Hour, func() (done bool, err error) {
-		klog.V(8).Infoln("Verifying license.......")
-		// Read license from file
-		err = le.readLicenseFromFile()
-		if err != nil {
-			return false, le.handleLicenseVerificationFailure(err)
-		}
-		// Validate license
-		err = verifier.VerifyLicense(le.opts)
-		if err != nil {
-			return false, le.handleLicenseVerificationFailure(err)
-		}
-		klog.Infoln("Successfully verified license!")
-		// return false so that the loop never ends
-		return false, nil
-	}, stopCh)
 }
 
 func (le *LicenseEnforcer) createClients() (err error) {
@@ -252,6 +219,51 @@ func (le *LicenseEnforcer) Install(c *mux.PathRecorderMux) {
 			klog.Fatalln(err)
 		}
 	}))
+}
+
+// VerifyLicensePeriodically periodically verifies whether the provided license is valid for the current cluster or not.
+func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <-chan struct{}) error {
+	if info.SkipLicenseVerification() {
+		klog.Infoln("License verification skipped")
+		return nil
+	}
+
+	le := &LicenseEnforcer{
+		licenseFile: licenseFile,
+		config:      config,
+		opts: &verifier.Options{
+			CACert:      []byte(info.LicenseCA),
+			ProductName: info.ProductName,
+		},
+	}
+	// Create Kubernetes client
+	err := le.createClients()
+	if err != nil {
+		return le.handleLicenseVerificationFailure(err)
+	}
+	// Read cluster UID (UID of the "kube-system" namespace)
+	err = le.readClusterUID()
+	if err != nil {
+		return le.handleLicenseVerificationFailure(err)
+	}
+
+	// Periodically verify license with 1 hour interval
+	return wait.PollImmediateUntil(1*time.Hour, func() (done bool, err error) {
+		klog.V(8).Infoln("Verifying license.......")
+		// Read license from file
+		err = le.readLicenseFromFile()
+		if err != nil {
+			return false, le.handleLicenseVerificationFailure(err)
+		}
+		// Validate license
+		err = verifier.VerifyLicense(le.opts)
+		if err != nil {
+			return false, le.handleLicenseVerificationFailure(err)
+		}
+		klog.Infoln("Successfully verified license!")
+		// return false so that the loop never ends
+		return false, nil
+	}, stopCh)
 }
 
 // CheckLicenseFile verifies whether the provided license is valid for the current cluster or not.
