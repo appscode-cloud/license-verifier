@@ -28,6 +28,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"syscall"
 	"time"
 
@@ -309,8 +310,8 @@ func CheckLicenseFile(config *rest.Config, licenseFile string) error {
 	return nil
 }
 
-// CheckLicenseEndpoint verifies whether the provided api server has a valid license is valid for a product.
-func CheckLicenseEndpoint(config *rest.Config, apiServiceName, product string) error {
+// CheckLicenseEndpoint verifies whether the provided api server has a valid license is valid for products.
+func CheckLicenseEndpoint(config *rest.Config, apiServiceName string, products []string) error {
 	aggrClient, err := clientset.NewForConfig(config)
 	if err != nil {
 		return err
@@ -362,8 +363,9 @@ func CheckLicenseEndpoint(config *rest.Config, apiServiceName, product string) e
 	if license.Status != v1alpha1.LicenseActive {
 		return fmt.Errorf("license %s is not active, status: %s", license.ID, license.Status)
 	}
-	if !sets.NewString(license.Products...).Has(product) {
-		return fmt.Errorf("license %s is not valid for product %q", license.ID, product)
+
+	if !sets.NewString(license.Products...).HasAny(products...) {
+		return fmt.Errorf("license %s is not valid for products %q", license.ID, strings.Join(products, ","))
 	}
 	return nil
 }
