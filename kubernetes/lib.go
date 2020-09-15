@@ -57,7 +57,7 @@ const (
 	EventSourceLicenseVerifier           = "License Verifier"
 	EventReasonLicenseVerificationFailed = "License Verification Failed"
 
-	licensePath = "/byte.builders/license"
+	licensePath = "/appscode/license"
 )
 
 type LicenseEnforcer struct {
