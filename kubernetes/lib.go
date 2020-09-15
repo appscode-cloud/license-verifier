@@ -18,6 +18,7 @@ package kubernetes
 
 import (
 	"context"
+	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
 	"encoding/pem"
@@ -25,6 +26,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"syscall"
 	"time"
@@ -43,6 +45,7 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/reference"
 	"k8s.io/klog"
+	"k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset"
 	core_util "kmodules.xyz/client-go/core/v1"
 	"kmodules.xyz/client-go/dynamic"
 	"kmodules.xyz/client-go/meta"
@@ -307,16 +310,39 @@ func CheckLicenseFile(config *rest.Config, licenseFile string) error {
 }
 
 // CheckLicenseEndpoint verifies whether the provided api server has a valid license is valid for a product.
-func CheckLicenseEndpoint(config *rest.Config, addr, product string) error {
-	rt, err := rest.TransportFor(config)
+func CheckLicenseEndpoint(config *rest.Config, apiServiceName, product string) error {
+	aggrClient, err := clientset.NewForConfig(config)
 	if err != nil {
 		return err
 	}
+
+	apiSvc, err := aggrClient.ApiregistrationV1beta1().APIServices().Get(context.TODO(), apiServiceName, metav1.GetOptions{})
+	if err != nil {
+		return err
+	}
+
+	rt := http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: apiSvc.Spec.InsecureSkipTLSVerify,
+		},
+	}
+	if len(apiSvc.Spec.CABundle) > 0 {
+		pool := x509.NewCertPool()
+		pool.AppendCertsFromPEM(apiSvc.Spec.CABundle)
+		rt.TLSClientConfig.RootCAs = pool
+	}
 	client := http.Client{
-		Transport: rt,
+		Transport: &rt,
 		Timeout:   30 * time.Second,
 	}
-	resp, err := client.Get(fmt.Sprintf("https://%s%s", addr, licensePath))
+
+	u, err := url.Parse(fmt.Sprintf("https://%s.%s.svc", apiSvc.Spec.Service.Name, apiSvc.Spec.Service.Namespace))
+	if err != nil {
+		return err
+	}
+	u.Path = licensePath
+
+	resp, err := client.Get(u.String())
 	if err != nil {
 		return err
 	}

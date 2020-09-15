@@ -11,5 +11,6 @@ require (
 	k8s.io/apiserver v0.18.3
 	k8s.io/client-go v0.18.3
 	k8s.io/klog v1.0.0
+	k8s.io/kube-aggregator v0.18.3
 	kmodules.xyz/client-go v0.0.0-20200818143024-600fef263e03
 )
