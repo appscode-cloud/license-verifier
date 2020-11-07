@@ -286,8 +286,9 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 		}
 		if licenseMissing {
 			klog.Warningf("license file is missing. You have %v to acquire a valid license", licenseCheckInterval)
+
+			return wait.PollUntil(licenseCheckInterval, fn, stopCh)
 		}
-		return wait.PollUntil(licenseCheckInterval, fn, stopCh)
 	}
 
 	return wait.PollImmediateUntil(licenseCheckInterval, fn, stopCh)
