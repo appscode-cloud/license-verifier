@@ -65,7 +65,9 @@ func VerifyLicense(opts *Options) error {
 		if err != nil {
 			return err
 		}
-		crtopts.DNSName = "*." + caCert.Subject.CommonName
+		if len(caCert.Subject.Organization) > 0 {
+			crtopts.DNSName = "*." + caCert.Subject.Organization[0]
+		}
 	}
 
 	if _, err := cert.Verify(crtopts); err != nil {
