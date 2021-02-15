@@ -14,12 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package v1alpha1 is the v1alpha1 version of the API.
+package install
 
-// +k8s:deepcopy-gen=package,register
-// +k8s:conversion-gen=go.bytebuilders.dev/license-verifier/kubernetes/apis/licenses
-// +k8s:openapi-gen=true
-// +k8s:defaulter-gen=TypeMeta
+import (
+	"go.bytebuilders.dev/license-verifier/apis/licenses/v1alpha1"
 
-// +groupName=licenses.appscode.com
-package v1alpha1
+	"k8s.io/apimachinery/pkg/runtime"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
+)
+
+// Install registers the API group and adds types to a scheme
+
+func Install(scheme *runtime.Scheme) {
+	utilruntime.Must(v1alpha1.AddToScheme(scheme))
+	utilruntime.Must(scheme.SetVersionPriority(v1alpha1.SchemeGroupVersion))
+}
