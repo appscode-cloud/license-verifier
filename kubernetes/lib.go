@@ -299,8 +299,8 @@ func CheckLicenseFile(config *rest.Config, licenseFile string) error {
 	return nil
 }
 
-// CheckLicenseEndpoint verifies whether the provided api server has a valid license is valid for products.
-func CheckLicenseEndpoint(config *rest.Config, apiServiceName string, products []string) error {
+// CheckLicenseEndpoint verifies whether the provided api server has a valid license is valid for features.
+func CheckLicenseEndpoint(config *rest.Config, apiServiceName string, features []string) error {
 	aggrClient, err := clientset.NewForConfig(config)
 	if err != nil {
 		return err
@@ -350,8 +350,8 @@ func CheckLicenseEndpoint(config *rest.Config, apiServiceName string, products [
 		return fmt.Errorf("license %s is not active, status: %s, reason: %s", license.ID, license.Status, license.Reason)
 	}
 
-	if !sets.NewString(license.Products...).HasAny(products...) {
-		return fmt.Errorf("license %s is not valid for products %q", license.ID, strings.Join(products, ","))
+	if !sets.NewString(license.Features...).HasAny(features...) {
+		return fmt.Errorf("license %s is not valid for products %q", license.ID, strings.Join(features, ","))
 	}
 	return nil
 }
