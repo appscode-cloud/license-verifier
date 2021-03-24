@@ -73,8 +73,8 @@ func NewLicenseEnforcer(config *rest.Config, licenseFile string) *LicenseEnforce
 		licenseFile: licenseFile,
 		config:      config,
 		opts: &verifier.Options{
-			CACert:      []byte(info.LicenseCA),
-			ProductName: info.ProductName,
+			CACert:   []byte(info.LicenseCA),
+			Features: info.ProductName,
 		},
 	}
 }
@@ -220,8 +220,8 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 		licenseFile: licenseFile,
 		config:      config,
 		opts: &verifier.Options{
-			CACert:      []byte(info.LicenseCA),
-			ProductName: info.ProductName,
+			CACert:   []byte(info.LicenseCA),
+			Features: info.ProductName,
 		},
 	}
 	// Create Kubernetes client
@@ -271,8 +271,8 @@ func CheckLicenseFile(config *rest.Config, licenseFile string) error {
 		licenseFile: licenseFile,
 		config:      config,
 		opts: &verifier.Options{
-			CACert:      []byte(info.LicenseCA),
-			ProductName: info.ProductName,
+			CACert:   []byte(info.LicenseCA),
+			Features: info.ProductName,
 		},
 	}
 	// Create Kubernetes client
