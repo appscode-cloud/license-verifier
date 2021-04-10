@@ -16,7 +16,10 @@ limitations under the License.
 
 package info
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 var (
 	EnforceLicense string
@@ -31,5 +34,8 @@ var (
 
 func SkipLicenseVerification() bool {
 	v, _ := strconv.ParseBool(EnforceLicense)
+	fmt.Println(">>>>>>>>>>>>>>>>> EnforceLicense", EnforceLicense)
+	fmt.Println(">>>>>>>>>>>>>>>>> EnforceLicense[v]", v)
+	fmt.Println(">>>>>>>>>>>>>>>>> SkipLicenseVerification[v]", !v)
 	return !v
 }
