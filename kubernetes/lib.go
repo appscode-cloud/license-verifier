@@ -124,7 +124,7 @@ func (le *LicenseEnforcer) handleLicenseVerificationFailure(licenseErr error) er
 	}()
 
 	// Log licenseInfo verification failure
-	klog.Errorln("Failed to verify license. Reason: ", licenseErr.Error())
+	fmt.Println("Failed to verify license. Reason: ", licenseErr.Error())
 
 	podName, err := le.podName()
 	if err != nil {
@@ -176,6 +176,7 @@ func (le *LicenseEnforcer) Install(c *mux.PathRecorderMux) {
 	// Create Kubernetes client
 	err := le.createClients()
 	if err != nil {
+		fmt.Println(err)
 		klog.Fatal(err)
 		return
 	}
@@ -218,7 +219,7 @@ func (le *LicenseEnforcer) LoadLicense() v1alpha1.License {
 // VerifyLicensePeriodically periodically verifies whether the provided license is valid for the current cluster or not.
 func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <-chan struct{}) error {
 	if info.SkipLicenseVerification() {
-		klog.Infoln("License verification skipped")
+		fmt.Println("License verification skipped")
 		return nil
 	}
 
@@ -243,7 +244,7 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 
 	// Periodically verify license with 1 hour interval
 	fn := func() (done bool, err error) {
-		klog.V(8).Infoln("Verifying license.......")
+		fmt.Println("Verifying license.......")
 		// Read license from file
 		err = le.readLicenseFromFile()
 		if err != nil {
@@ -254,7 +255,7 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 		if err != nil {
 			return false, le.handleLicenseVerificationFailure(err)
 		}
-		klog.Infoln("Successfully verified license!")
+		fmt.Println("Successfully verified license!")
 		// return false so that the loop never ends
 		return false, nil
 	}
@@ -268,11 +269,11 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 // CheckLicenseFile verifies whether the provided license is valid for the current cluster or not.
 func CheckLicenseFile(config *rest.Config, licenseFile string) error {
 	if info.SkipLicenseVerification() {
-		klog.Infoln("License verification skipped")
+		fmt.Println("License verification skipped")
 		return nil
 	}
 
-	klog.V(8).Infoln("Verifying license.......")
+	fmt.Println("Verifying license.......")
 	le := &LicenseEnforcer{
 		licenseFile: licenseFile,
 		config:      config,
@@ -301,7 +302,7 @@ func CheckLicenseFile(config *rest.Config, licenseFile string) error {
 	if err != nil {
 		return le.handleLicenseVerificationFailure(err)
 	}
-	klog.Infoln("Successfully verified license!")
+	fmt.Println("Successfully verified license!")
 	return nil
 }
 
