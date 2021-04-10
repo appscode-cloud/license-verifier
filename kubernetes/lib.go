@@ -272,7 +272,7 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 
 	if _, err := os.Stat(licenseFile); os.IsNotExist(err) {
 		oneliners.FILE(err)
-		return errors.New("license file is missing")
+		return le.handleLicenseVerificationFailure(fmt.Errorf("license file is missing, reason: %v", err))
 	}
 	return wait.PollImmediateUntil(licenseCheckInterval, fn, stopCh)
 }
