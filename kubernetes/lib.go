@@ -218,6 +218,8 @@ func (le *LicenseEnforcer) LoadLicense() v1alpha1.License {
 
 // VerifyLicensePeriodically periodically verifies whether the provided license is valid for the current cluster or not.
 func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <-chan struct{}) error {
+	fmt.Println("License verification skipped", info.SkipLicenseVerification())
+
 	if info.SkipLicenseVerification() {
 		fmt.Println("License verification skipped")
 		return nil
