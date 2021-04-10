@@ -34,6 +34,7 @@ import (
 	"go.bytebuilders.dev/license-verifier/info"
 
 	verifier "go.bytebuilders.dev/license-verifier"
+	"gomodules.xyz/oneliners"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -225,6 +226,8 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 		return nil
 	}
 
+	oneliners.FILE()
+
 	le := &LicenseEnforcer{
 		licenseFile: licenseFile,
 		config:      config,
@@ -236,25 +239,30 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 	// Create Kubernetes client
 	err := le.createClients()
 	if err != nil {
+		oneliners.FILE(err)
 		return le.handleLicenseVerificationFailure(err)
 	}
 	// Read cluster UID (UID of the "kube-system" namespace)
 	err = le.readClusterUID()
 	if err != nil {
+		oneliners.FILE(err)
 		return le.handleLicenseVerificationFailure(err)
 	}
 
 	// Periodically verify license with 1 hour interval
 	fn := func() (done bool, err error) {
+		oneliners.FILE()
 		fmt.Println("Verifying license.......")
 		// Read license from file
 		err = le.readLicenseFromFile()
 		if err != nil {
+			oneliners.FILE(err)
 			return false, le.handleLicenseVerificationFailure(err)
 		}
 		// Validate license
 		_, err = verifier.VerifyLicense(le.opts)
 		if err != nil {
+			oneliners.FILE(err)
 			return false, le.handleLicenseVerificationFailure(err)
 		}
 		fmt.Println("Successfully verified license!")
@@ -263,6 +271,7 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 	}
 
 	if _, err := os.Stat(licenseFile); os.IsNotExist(err) {
+		oneliners.FILE(err)
 		return errors.New("license file is missing")
 	}
 	return wait.PollImmediateUntil(licenseCheckInterval, fn, stopCh)

@@ -5,6 +5,7 @@ go 1.14
 require (
 	github.com/gogo/protobuf v1.3.1
 	go.bytebuilders.dev/license-verifier v0.8.0
+	gomodules.xyz/oneliners v0.0.0-20200730052119-bccc7758058b
 	k8s.io/api v0.18.9
 	k8s.io/apimachinery v0.18.9
 	k8s.io/apiserver v0.18.9
