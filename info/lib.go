@@ -39,7 +39,7 @@ func SkipLicenseVerification() bool {
 
 func RegistrationAPIEndpoint() string {
 	if SkipLicenseVerification() {
-		return qaRegistrationAPI
+		return qaRegistrationAPIEndpoint
 	}
-	return prodRegistrationAPI
+	return prodRegistrationAPIEndpoint
 }
