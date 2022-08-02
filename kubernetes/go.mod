@@ -6,7 +6,7 @@ require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/pkg/errors v0.9.1
 	go.bytebuilders.dev/license-proxyserver v0.0.2-0.20220802031002-926d24a28f5d
-	go.bytebuilders.dev/license-verifier v0.10.0
+	go.bytebuilders.dev/license-verifier v0.11.0
 	k8s.io/api v0.24.2
 	k8s.io/apimachinery v0.24.2
 	k8s.io/apiserver v0.24.1
