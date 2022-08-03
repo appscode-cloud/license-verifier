@@ -113,7 +113,7 @@ func (le *LicenseEnforcer) createClients() (err error) {
 	return err
 }
 
-func (le *LicenseEnforcer) readLicenseFromFile() (err error) {
+func (le *LicenseEnforcer) acquireLicense() (err error) {
 	le.opts.License, err = le.getLicense()
 	return err
 }
@@ -224,7 +224,7 @@ func (le *LicenseEnforcer) LoadLicense() v1alpha1.License {
 		return license
 	}
 	// Read license from file
-	err = le.readLicenseFromFile()
+	err = le.acquireLicense()
 	if err != nil {
 		license, _ := verifier.BadLicense(err)
 		return license
@@ -280,7 +280,7 @@ func verifyLicensePeriodically(le *LicenseEnforcer, licenseFile string, stopCh <
 	fn := func() (done bool, err error) {
 		klog.V(8).Infoln("Verifying license.......")
 		// Read license from file
-		err = le.readLicenseFromFile()
+		err = le.acquireLicense()
 		if err != nil {
 			return false, err
 		}
@@ -335,7 +335,7 @@ func checkLicenseFile(le *LicenseEnforcer) error {
 		return err
 	}
 	// Read license from file
-	err = le.readLicenseFromFile()
+	err = le.acquireLicense()
 	if err != nil {
 		return err
 	}
