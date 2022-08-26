@@ -36,9 +36,10 @@ var (
 	ProductName string // This has been renamed to Features
 	ProductUID  string
 
-	prodAddress         = "https://byte.builders"
-	qaAddress           = "https://appscode.ninja"
-	registrationAPIPath = "api/v1/register"
+	prodAddress          = "https://byte.builders"
+	qaAddress            = "https://appscode.ninja"
+	registrationAPIPath  = "api/v1/register"
+	licenseIssuerAPIPath = "api/v1/license/issue"
 )
 
 func Features() []string {
@@ -60,6 +61,12 @@ func SkipLicenseVerification() bool {
 func RegistrationAPIEndpoint() string {
 	u := APIServerAddress()
 	u.Path = path.Join(u.Path, registrationAPIPath)
+	return u.String()
+}
+
+func LicenseIssuerAPIEndpoint() string {
+	u := APIServerAddress()
+	u.Path = path.Join(u.Path, licenseIssuerAPIPath)
 	return u.String()
 }
 
