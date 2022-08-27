@@ -26,6 +26,7 @@ import (
 type License struct {
 	metav1.TypeMeta `json:",inline,omitempty"`
 
+	Data         []byte            `json:"-"`
 	Issuer       string            `json:"issuer,omitempty"` // byte.builders
 	ProductLine  string            `json:"productLine,omitempty"`
 	TierName     string            `json:"tierName,omitempty"`

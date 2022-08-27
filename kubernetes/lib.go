@@ -82,7 +82,7 @@ func NewLicenseEnforcer(config *rest.Config, licenseFile string) (*LicenseEnforc
 	if err != nil {
 		return &le, err
 	}
-	le.opts.CACert, err = info.ParseCertificate([]byte(caData))
+	le.opts.CACert, err = info.ParseCertificate(caData)
 	if err != nil {
 		return &le, err
 	}
