@@ -46,11 +46,12 @@ type User struct {
 	Email string `json:"email"`
 }
 
+// +kubebuilder:validation:Enum=unknown;active;invalid;canceled
 type LicenseStatus string
 
 const (
 	LicenseUnknown  LicenseStatus = "unknown"
 	LicenseActive   LicenseStatus = "active"
-	LicenseExpired  LicenseStatus = "expired"
+	LicenseInvalid  LicenseStatus = "invalid"
 	LicenseCanceled LicenseStatus = "canceled"
 )

@@ -17,12 +17,20 @@ limitations under the License.
 package info
 
 import (
+	"bytes"
+	"crypto/x509"
+	"encoding/pem"
+	"errors"
+	"io"
+	"net/http"
 	"net/url"
 	"path"
 	"strconv"
 	"strings"
 	"unicode"
 
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
@@ -77,4 +85,44 @@ func APIServerAddress() *url.URL {
 	}
 	u, _ := url.Parse(prodAddress)
 	return u
+}
+
+func LoadLicenseCA() (string, error) {
+	if LicenseCA != "" {
+		return LicenseCA, nil
+	}
+
+	resp, err := http.Get("https://licenses.appscode.com/certificates/ca.crt")
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	var buf bytes.Buffer
+	_, err = io.Copy(&buf, resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return "", apierrors.NewGenericServerResponse(
+			resp.StatusCode,
+			http.MethodPost,
+			schema.GroupResource{Group: "licenses.appscode.com", Resource: "License"},
+			"LicenseCA",
+			buf.String(),
+			0,
+			false,
+		)
+	}
+	return buf.String(), nil
+}
+
+func ParseCertificate(data []byte) (*x509.Certificate, error) {
+	block, _ := pem.Decode(data)
+	if block == nil {
+		// This probably is a JWT token, should be check for that when ready
+		return nil, errors.New("failed to parse certificate PEM")
+	}
+	return x509.ParseCertificate(block.Bytes)
 }

@@ -19,7 +19,6 @@ package kubernetes
 import (
 	"context"
 	"encoding/json"
-	"encoding/pem"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -29,12 +28,13 @@ import (
 	"syscall"
 	"time"
 
+	"go.bytebuilders.dev/license-verifier/apis/licenses/v1alpha1"
+	"go.bytebuilders.dev/license-verifier/info"
+
 	"github.com/pkg/errors"
 	proxyserver "go.bytebuilders.dev/license-proxyserver/apis/proxyserver/v1alpha1"
 	proxyclient "go.bytebuilders.dev/license-proxyserver/client/clientset/versioned"
 	verifier "go.bytebuilders.dev/license-verifier"
-	"go.bytebuilders.dev/license-verifier/apis/licenses/v1alpha1"
-	"go.bytebuilders.dev/license-verifier/info"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
@@ -62,22 +62,31 @@ const (
 )
 
 type LicenseEnforcer struct {
-	opts       *verifier.Options
+	opts       verifier.VerifyOptions
 	config     *rest.Config
 	kc         kubernetes.Interface
 	getLicense func() ([]byte, error)
 }
 
 // NewLicenseEnforcer returns a newly created license enforcer
-func NewLicenseEnforcer(config *rest.Config, licenseFile string) *LicenseEnforcer {
-	return &LicenseEnforcer{
+func NewLicenseEnforcer(config *rest.Config, licenseFile string) (*LicenseEnforcer, error) {
+	le := LicenseEnforcer{
 		getLicense: getLicense(config, licenseFile),
 		config:     config,
-		opts: &verifier.Options{
-			CACert:   []byte(info.LicenseCA),
+		opts: verifier.VerifyOptions{
 			Features: info.ProductName,
 		},
 	}
+
+	caData, err := info.LoadLicenseCA()
+	if err != nil {
+		return &le, err
+	}
+	le.opts.CACert, err = info.ParseCertificate([]byte(caData))
+	if err != nil {
+		return &le, err
+	}
+	return &le, nil
 }
 
 func getLicense(cfg *rest.Config, licenseFile string) func() ([]byte, error) {
@@ -229,16 +238,7 @@ func (le *LicenseEnforcer) LoadLicense() v1alpha1.License {
 		license, _ := verifier.BadLicense(err)
 		return license
 	}
-	// Parse license
-
-	block, _ := pem.Decode(le.opts.License)
-	if block == nil {
-		// This probably is a JWT token, should be check for that when ready
-		license, _ := verifier.BadLicense(fmt.Errorf("failed to parse certificate PEM %s", string(le.opts.License)))
-		return license
-	}
-
-	license, _ := verifier.VerifyLicense(le.opts)
+	license, _ := verifier.CheckLicense(le.opts)
 	return license
 }
 
@@ -249,15 +249,10 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 		return nil
 	}
 
-	le := &LicenseEnforcer{
-		getLicense: getLicense(config, licenseFile),
-		config:     config,
-		opts: &verifier.Options{
-			CACert:   []byte(info.LicenseCA),
-			Features: info.ProductName,
-		},
+	le, err := NewLicenseEnforcer(config, licenseFile)
+	if err != nil {
+		return le.handleLicenseVerificationFailure(err)
 	}
-
 	if err := verifyLicensePeriodically(le, licenseFile, stopCh); err != nil {
 		return le.handleLicenseVerificationFailure(err)
 	}
@@ -285,7 +280,7 @@ func verifyLicensePeriodically(le *LicenseEnforcer, licenseFile string, stopCh <
 			return false, err
 		}
 		// Validate license
-		_, err = verifier.VerifyLicense(le.opts)
+		_, err = verifier.CheckLicense(le.opts)
 		if err != nil {
 			return false, err
 		}
@@ -308,15 +303,10 @@ func CheckLicenseFile(config *rest.Config, licenseFile string) error {
 	}
 
 	klog.V(8).Infoln("Verifying license.......")
-	le := &LicenseEnforcer{
-		getLicense: getLicense(config, licenseFile),
-		config:     config,
-		opts: &verifier.Options{
-			CACert:   []byte(info.LicenseCA),
-			Features: info.ProductName,
-		},
+	le, err := NewLicenseEnforcer(config, licenseFile)
+	if err != nil {
+		return le.handleLicenseVerificationFailure(err)
 	}
-
 	if err := checkLicenseFile(le); err != nil {
 		return le.handleLicenseVerificationFailure(err)
 	}
@@ -340,7 +330,7 @@ func checkLicenseFile(le *LicenseEnforcer) error {
 		return err
 	}
 	// Validate license
-	_, err = verifier.VerifyLicense(le.opts)
+	_, err = verifier.CheckLicense(le.opts)
 	if err != nil {
 		return err
 	}
