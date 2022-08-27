@@ -44,7 +44,7 @@ type ParserOptions struct {
 
 type VerifyOptions struct {
 	ParserOptions
-	Features string `json:"features"`
+	Features string
 }
 
 func ParseLicense(opts ParserOptions) (v1alpha1.License, error) {
