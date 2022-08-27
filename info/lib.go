@@ -29,6 +29,8 @@ import (
 	"strings"
 	"unicode"
 
+	"go.bytebuilders.dev/license-verifier/apis/licenses"
+
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -87,35 +89,35 @@ func APIServerAddress() *url.URL {
 	return u
 }
 
-func LoadLicenseCA() (string, error) {
+func LoadLicenseCA() ([]byte, error) {
 	if LicenseCA != "" {
-		return LicenseCA, nil
+		return []byte(LicenseCA), nil
 	}
 
 	resp, err := http.Get("https://licenses.appscode.com/certificates/ca.crt")
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	var buf bytes.Buffer
 	_, err = io.Copy(&buf, resp.Body)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return "", apierrors.NewGenericServerResponse(
+		return nil, apierrors.NewGenericServerResponse(
 			resp.StatusCode,
 			http.MethodPost,
-			schema.GroupResource{Group: "licenses.appscode.com", Resource: "License"},
+			schema.GroupResource{Group: licenses.GroupName, Resource: "License"},
 			"LicenseCA",
 			buf.String(),
 			0,
 			false,
 		)
 	}
-	return buf.String(), nil
+	return buf.Bytes(), nil
 }
 
 func ParseCertificate(data []byte) (*x509.Certificate, error) {

@@ -76,6 +76,7 @@ func ParseLicense(opts ParserOptions) (v1alpha1.License, error) {
 			APIVersion: v1alpha1.SchemeGroupVersion.String(),
 			Kind:       "License",
 		},
+		Data:      opts.License,
 		Issuer:    "byte.builders",
 		Clusters:  cert.DNSNames,
 		NotBefore: &metav1.Time{Time: cert.NotBefore},
