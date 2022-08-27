@@ -49,7 +49,7 @@ var (
 	prodAddress          = "https://byte.builders"
 	qaAddress            = "https://appscode.ninja"
 	registrationAPIPath  = "api/v1/register"
-	licenseIssuerAPIPath = "api/v1/license/issue"
+	LicenseIssuerAPIPath = "api/v1/license/issue"
 )
 
 func Features() []string {
@@ -76,7 +76,7 @@ func RegistrationAPIEndpoint() string {
 
 func LicenseIssuerAPIEndpoint() string {
 	u := APIServerAddress()
-	u.Path = path.Join(u.Path, licenseIssuerAPIPath)
+	u.Path = path.Join(u.Path, LicenseIssuerAPIPath)
 	return u.String()
 }
 

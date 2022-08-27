@@ -21,6 +21,8 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"net/url"
+	"path"
 
 	"go.bytebuilders.dev/license-verifier/apis/licenses"
 	"go.bytebuilders.dev/license-verifier/info"
@@ -29,12 +31,36 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-func AcquireLicense(token, clusterUID string, features []string) ([]byte, error) {
+type Client struct {
+	url        string
+	token      string
+	clusterUID string
+}
+
+func NewClient(baseURL, token, clusterUID string) (*Client, error) {
+	c := Client{
+		token:      token,
+		clusterUID: clusterUID,
+	}
+	if baseURL == "" {
+		c.url = info.LicenseIssuerAPIEndpoint()
+	} else {
+		u, err := url.Parse(baseURL)
+		if err != nil {
+			return nil, err
+		}
+		u.Path = path.Join(u.Path, info.LicenseIssuerAPIPath)
+		c.url = u.String()
+	}
+	return &c, nil
+}
+
+func (c *Client) AcquireLicense(features []string) ([]byte, error) {
 	opts := struct {
 		Cluster  string   `json:"cluster"`
 		Features []string `json:"features"`
 	}{
-		Cluster:  clusterUID,
+		Cluster:  c.clusterUID,
 		Features: features,
 	}
 	data, err := json.Marshal(opts)
@@ -42,13 +68,13 @@ func AcquireLicense(token, clusterUID string, features []string) ([]byte, error)
 		return nil, err
 	}
 
-	req, err := http.NewRequest(http.MethodPost, info.LicenseIssuerAPIEndpoint(), bytes.NewReader(data))
+	req, err := http.NewRequest(http.MethodPost, c.url, bytes.NewReader(data))
 	if err != nil {
 		return nil, err
 	}
 	// add authorization header to the req
-	if token != "" {
-		req.Header.Add("Authorization", "Bearer "+token)
+	if c.token != "" {
+		req.Header.Add("Authorization", "Bearer "+c.token)
 	}
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
