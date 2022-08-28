@@ -20,7 +20,7 @@ func (l License) DisableAnalytics() bool {
 	return len(l.FeatureFlags) > 0 && l.FeatureFlags["DisableAnalytics"] == "true"
 }
 
-func (i License) Less(j License) bool {
+func (i *License) Less(j *License) bool {
 	if i.NotBefore == nil {
 		return true
 	} else if j.NotBefore == nil {
