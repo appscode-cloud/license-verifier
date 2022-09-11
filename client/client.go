@@ -83,8 +83,7 @@ func (c *Client) AcquireLicense(features []string) ([]byte, *v1alpha1.Contract, 
 	}
 	defer resp.Body.Close()
 
-	var buf bytes.Buffer
-	_, err = io.Copy(&buf, resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -95,7 +94,7 @@ func (c *Client) AcquireLicense(features []string) ([]byte, *v1alpha1.Contract, 
 			http.MethodPost,
 			schema.GroupResource{Group: licenses.GroupName, Resource: "License"},
 			"",
-			buf.String(),
+			string(body),
 			0,
 			false,
 		)
@@ -105,7 +104,7 @@ func (c *Client) AcquireLicense(features []string) ([]byte, *v1alpha1.Contract, 
 		Contract *v1alpha1.Contract `json:"contract,omitempty"`
 		License  []byte             `json:"license"`
 	}{}
-	err = json.Unmarshal(buf.Bytes(), &lc)
+	err = json.Unmarshal(body, &lc)
 	if err != nil {
 		return nil, nil, err
 	}
