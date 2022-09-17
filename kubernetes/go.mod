@@ -5,8 +5,8 @@ go 1.18
 require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/pkg/errors v0.9.1
-	go.bytebuilders.dev/license-proxyserver v0.0.2-0.20220917050045-ddf98e6752c8
-	go.bytebuilders.dev/license-verifier v0.11.1-0.20220917043059-0ecd48a27d8c
+	go.bytebuilders.dev/license-proxyserver v0.0.2-0.20220917052300-e49b09065bec
+	go.bytebuilders.dev/license-verifier v0.12.0
 	k8s.io/api v0.25.1
 	k8s.io/apimachinery v0.25.1
 	k8s.io/apiserver v0.25.1
