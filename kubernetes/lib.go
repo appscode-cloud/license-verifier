@@ -297,9 +297,6 @@ func verifyLicensePeriodically(le *LicenseEnforcer, licenseFile string, stopCh <
 		return false, nil
 	}
 
-	if _, err := os.Stat(licenseFile); os.IsNotExist(err) {
-		return errors.New("license file is missing")
-	}
 	return wait.PollImmediateUntil(licenseCheckInterval, fn, stopCh)
 }
 
