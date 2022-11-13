@@ -73,6 +73,7 @@ func (c *Client) AcquireLicense(features []string) ([]byte, *v1alpha1.Contract, 
 	if err != nil {
 		return nil, nil, err
 	}
+	req.Header.Set("Content-Type", "application/json")
 	// add authorization header to the req
 	if c.token != "" {
 		req.Header.Add("Authorization", "Bearer "+c.token)
