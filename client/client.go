@@ -21,8 +21,6 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-	"net/url"
-	"path"
 
 	"go.bytebuilders.dev/license-verifier/apis/licenses"
 	"go.bytebuilders.dev/license-verifier/apis/licenses/v1alpha1"
@@ -39,21 +37,15 @@ type Client struct {
 }
 
 func NewClient(baseURL, token, clusterUID string) (*Client, error) {
-	c := Client{
+	u, err := info.LicenseIssuerAPIEndpoint(baseURL)
+	if err != nil {
+		return nil, err
+	}
+	return &Client{
+		url:        u,
 		token:      token,
 		clusterUID: clusterUID,
-	}
-	if baseURL == "" {
-		c.url = info.LicenseIssuerAPIEndpoint()
-	} else {
-		u, err := url.Parse(baseURL)
-		if err != nil {
-			return nil, err
-		}
-		u.Path = path.Join(u.Path, info.LicenseIssuerAPIPath)
-		c.url = u.String()
-	}
-	return &c, nil
+	}, nil
 }
 
 func (c *Client) AcquireLicense(features []string) ([]byte, *v1alpha1.Contract, error) {
