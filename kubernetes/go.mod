@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/pkg/errors v0.9.1
-	go.bytebuilders.dev/license-proxyserver v0.0.2-0.20221113070558-69a84f79c7ee
+	go.bytebuilders.dev/license-proxyserver v0.0.2
 	go.bytebuilders.dev/license-verifier v0.12.1
 	k8s.io/api v0.25.1
 	k8s.io/apimachinery v0.25.1
@@ -18,8 +18,7 @@ require (
 
 require (
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
-	github.com/PuerkitoBio/purell v1.1.1 // indirect
-	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
+	github.com/PuerkitoBio/purell v1.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.8.0 // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
