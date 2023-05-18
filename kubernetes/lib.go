@@ -127,8 +127,8 @@ func (le *LicenseEnforcer) invalidLicense(license []byte) bool {
 	// contains a valid license for a different product.
 	// We want to acquire license-proxyserver is a previously valid license has not expired.
 	// So, we don't check features in the license found is license file.
-	_, err := verifier.ParseLicense(le.opts.ParserOptions)
-	return err != nil
+	l, err := verifier.ParseLicense(le.opts.ParserOptions)
+	return sets.NewString(l.Features...).HasAny(info.ParseFeatures(le.opts.Features)...) && err != nil
 }
 
 func (le *LicenseEnforcer) createClients() (err error) {
