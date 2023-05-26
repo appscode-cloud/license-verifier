@@ -19,7 +19,6 @@ github.com/emicklei/go-restful/v3 v3.8.0 h1:eCZ8ulSerjdAiaNpF7GxXIE7ZCMo1moN1qX+
 github.com/emicklei/go-restful/v3 v3.8.0/go.mod h1:6n3XBCmQQb25CM2LCACGz8ukIrRry+4bhvbpWn3mrbc=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
-github.com/evanphx/json-patch v0.5.2/go.mod h1:ZWS5hhDbVDyob71nXKNL0+PWn6ToqBHMikGIFbs31qQ=
 github.com/evanphx/json-patch v4.12.0+incompatible h1:4onqiflcdA9EOZ4RxV643DvftH5pOlLGNtQ5lPWQu84=
 github.com/evanphx/json-patch v4.12.0+incompatible/go.mod h1:50XU6AFN0ol/bzJsmQLiYLvXMP4fmwYFNcr97nuDLSk=
 github.com/evanphx/json-patch/v5 v5.6.0 h1:b91NhWfaz02IuVxO9faSllyAtNXHMPkC5J8sJCLunww=
@@ -199,8 +198,8 @@ golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7/go.mod h1:I/5z698sn9Ka8T
 golang.org/x/xerrors v0.0.0-20191011141410-1b5146add898/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
 golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1/go.mod h1:I/5z698sn9Ka8TeJc9MKroUUfqBBauWjQqLJ2OPfmY0=
-gomodules.xyz/jsonpatch/v2 v2.2.0 h1:4pT439QV83L+G9FkcCriY6EkpcK6r6bK+A5FBUMI7qY=
-gomodules.xyz/jsonpatch/v2 v2.2.0/go.mod h1:WXp+iVDkoLQqPudfQ9GBlwB2eZ5DKOnjQZCYdOS8GPY=
+gomodules.xyz/jsonpatch/v2 v2.3.0 h1:8NFhfS6gzxNqjLIYnZxg319wZ5Qjnx4m/CcX+Klzazc=
+gomodules.xyz/jsonpatch/v2 v2.3.0/go.mod h1:AH3dM2RI6uoBZxn3LVrfvJ3E0/9dG4cSrbuBJT4moAY=
 gomodules.xyz/mergo v0.3.13 h1:q6cL/MMXZH/MrR2+yjSihFFq6UifXqjwaqI48B6cMEM=
 gomodules.xyz/mergo v0.3.13/go.mod h1:F/2rKC7j0URTnHUKDiTiLcGdLMhdv8jK2Za3cRTUVmc=
 gomodules.xyz/pointer v0.1.0 h1:sG2UKrYVSo6E3r4itAjXfPfe4fuXMi0KdyTHpR3vGCg=
@@ -268,8 +267,8 @@ k8s.io/utils v0.0.0-20220823124924-e9cbc92d1a73 h1:H9TCJUUx+2VA0ZiD9lvtaX8fthFsM
 k8s.io/utils v0.0.0-20220823124924-e9cbc92d1a73/go.mod h1:jPW/WVKK9YHAvNhRxK0md/EJ228hCsBRufyofKtW8HA=
 kmodules.xyz/apiversion v0.2.0 h1:vAQYqZFm4xu4pbB1cAdHbFEPES6EQkcR4wc06xdTOWk=
 kmodules.xyz/apiversion v0.2.0/go.mod h1:oPX8g8LvlPdPX3Yc5YvCzJHQnw3YF/X4/jdW0b1am80=
-kmodules.xyz/client-go v0.25.22 h1:gtRyVl5Ar87zzKj4g7Nx+0QSeWq9yTKADoasZP+brZg=
-kmodules.xyz/client-go v0.25.22/go.mod h1:KWVpgjAj/VNzCzj/BihpJkY39aWIqe8qMp5RuPsuSJA=
+kmodules.xyz/client-go v0.25.23 h1:qz5XJYHLVZUowqfRXEJD7JQ4iaLLzQ1O1zPMmsdrkJw=
+kmodules.xyz/client-go v0.25.23/go.mod h1:wbdzLEoDYiCPI6dTW0mIAGNwkwFV4lC5BN1FJxiDsbw=
 sigs.k8s.io/controller-runtime v0.13.1 h1:tUsRCSJVM1QQOOeViGeX3GMT3dQF1eePPw6sEE3xSlg=
 sigs.k8s.io/controller-runtime v0.13.1/go.mod h1:Zbz+el8Yg31jubvAEyglRZGdLAjplZl+PgtYNI6WNTI=
 sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 h1:iXTIw73aPyC+oRdyqqvVJuloN1p0AC/kzH07hu3NE+k=
