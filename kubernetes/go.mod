@@ -5,15 +5,15 @@ go 1.18
 require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/pkg/errors v0.9.1
-	go.bytebuilders.dev/license-proxyserver v0.0.3
-	go.bytebuilders.dev/license-verifier v0.13.2
+	go.bytebuilders.dev/license-proxyserver v0.0.4
+	go.bytebuilders.dev/license-verifier v0.13.3
 	k8s.io/api v0.25.1
 	k8s.io/apimachinery v0.25.3
 	k8s.io/apiserver v0.25.1
 	k8s.io/client-go v0.25.1
 	k8s.io/klog/v2 v2.80.1
 	k8s.io/kube-aggregator v0.25.1
-	kmodules.xyz/client-go v0.25.23
+	kmodules.xyz/client-go v0.25.24
 )
 
 require (
