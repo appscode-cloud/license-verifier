@@ -137,8 +137,8 @@ github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82/go.mod h1:lgjkn3NuSvDf
 github.com/yudai/pp v2.0.1+incompatible h1:Q4//iY4pNF6yPLZIigmvcl7k/bPgrcTPIFIcmawg5bI=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
-go.bytebuilders.dev/license-proxyserver v0.0.4 h1:GkgqM3swn7Q46G3q61u3it0Sn1eEuzizj8IwZZGIc0Y=
-go.bytebuilders.dev/license-proxyserver v0.0.4/go.mod h1:5bZq4IdV2WuY2P5rAkXTuUlqIUZ0uPG3tMIEOzBiMDs=
+go.bytebuilders.dev/license-proxyserver v0.0.5 h1:t+OS5M+mRHvgM95ticMEIPwVKzlxGzbO6bZXwENYTk8=
+go.bytebuilders.dev/license-proxyserver v0.0.5/go.mod h1:QfJGxwfLumnzehokbuzqya9FvE+dQt9yFGTxw9Bryzw=
 go.uber.org/atomic v1.7.0 h1:ADUqmZGgLDDfbSL9ZmPxKTybcoEYHgpYfELNoN+7hsw=
 go.uber.org/multierr v1.6.0 h1:y6IPFStTAIT5Ytl7/XYmHvzXQ7S3g/IeZW9hyZ5thw4=
 go.uber.org/zap v1.21.0 h1:WefMeulhovoZ2sYXz7st6K0sLj7bBhpiFaud4r4zST8=
