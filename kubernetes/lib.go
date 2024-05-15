@@ -223,27 +223,28 @@ func (le *LicenseEnforcer) Install(c *mux.PathRecorderMux) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("x-content-type-options", "nosniff")
 
-		utilruntime.Must(json.NewEncoder(w).Encode(le.LoadLicense()))
+		license, _ := le.LoadLicense()
+		utilruntime.Must(json.NewEncoder(w).Encode(license))
 	}))
 }
 
-func (le *LicenseEnforcer) LoadLicense() v1alpha1.License {
+func (le *LicenseEnforcer) LoadLicense() (v1alpha1.License, []byte) {
 	utilruntime.Must(le.createClients())
 
 	// Read cluster UID (UID of the "kube-system" namespace)
 	err := le.readClusterUID()
 	if err != nil {
 		license, _ := verifier.BadLicense(err)
-		return license
+		return license, nil
 	}
 	// Read license from file
 	err = le.acquireLicense()
 	if err != nil {
 		license, _ := verifier.BadLicense(err)
-		return license
+		return license, nil
 	}
 	license, _ := verifier.CheckLicense(le.opts)
-	return license
+	return license, le.opts.License
 }
 
 // VerifyLicensePeriodically periodically verifies whether the provided license is valid for the current cluster or not.
