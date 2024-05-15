@@ -276,7 +276,7 @@ func verifyLicensePeriodically(le *LicenseEnforcer, licenseFile string, stopCh <
 	}
 
 	// Periodically verify license with 1 hour interval
-	fn := func() (done bool, err error) {
+	fn := func(ctx context.Context) (done bool, err error) {
 		klog.V(8).Infoln("Verifying license.......")
 		// Read license from file
 		err = le.acquireLicense()
@@ -293,7 +293,7 @@ func verifyLicensePeriodically(le *LicenseEnforcer, licenseFile string, stopCh <
 		return false, nil
 	}
 
-	return wait.PollImmediateUntil(licenseCheckInterval, fn, stopCh)
+	return wait.PollUntilContextCancel(wait.ContextForChannel(stopCh), licenseCheckInterval, true, fn)
 }
 
 // CheckLicenseFile verifies whether the provided license is valid for the current cluster or not.
