@@ -18,7 +18,11 @@ package client
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
+	"encoding/pem"
+	"errors"
 	"io"
 	"net/http"
 
@@ -79,6 +83,13 @@ func (c *Client) AcquireLicense(features []string) ([]byte, *v1alpha1.Contract, 
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
+		var ce *tls.CertificateVerificationError
+		if errors.As(err, &ce) {
+			klog.ErrorS(err, "UnverifiedCertificates")
+			for _, cert := range ce.UnverifiedCertificates {
+				klog.Errorln(string(encodeCertPEM(cert)))
+			}
+		}
 		return nil, nil, err
 	}
 	defer resp.Body.Close()
@@ -109,4 +120,12 @@ func (c *Client) AcquireLicense(features []string) ([]byte, *v1alpha1.Contract, 
 		return nil, nil, err
 	}
 	return lc.License, lc.Contract, nil
+}
+
+func encodeCertPEM(cert *x509.Certificate) []byte {
+	block := pem.Block{
+		Type:  "CERTIFICATE",
+		Bytes: cert.Raw,
+	}
+	return pem.EncodeToMemory(&block)
 }
