@@ -28,6 +28,8 @@ import (
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/klog/v2"
+	"moul.io/http2curl/v2"
 )
 
 type Client struct {
@@ -70,6 +72,11 @@ func (c *Client) AcquireLicense(features []string) ([]byte, *v1alpha1.Contract, 
 	if c.token != "" {
 		req.Header.Add("Authorization", "Bearer "+c.token)
 	}
+	if klog.V(8).Enabled() {
+		command, _ := http2curl.GetCurlCommand(req)
+		klog.V(8).Infoln(command.String())
+	}
+
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, nil, err
