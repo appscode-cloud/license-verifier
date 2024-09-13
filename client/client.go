@@ -53,19 +53,18 @@ func NewClient(baseURL, token, clusterUID string, caCert []byte, insecureSkipVer
 		url:        u,
 		token:      token,
 		clusterUID: clusterUID,
+		client:     http.DefaultClient,
 	}
-	if len(caCert) == 0 {
-		c.client = http.DefaultClient
-	} else {
-		caCertPool := x509.NewCertPool()
-		caCertPool.AppendCertsFromPEM(caCert)
-
+	if len(caCert) > 0 || insecureSkipVerifyTLS {
 		tlsConfig := &tls.Config{
 			InsecureSkipVerify: insecureSkipVerifyTLS,
-			RootCAs:            caCertPool,
 		}
-		transport := &http.Transport{TLSClientConfig: tlsConfig}
-		c.client = &http.Client{Transport: transport}
+		if len(c.caCert) > 0 {
+			caCertPool := x509.NewCertPool()
+			caCertPool.AppendCertsFromPEM(caCert)
+			tlsConfig.RootCAs = caCertPool
+		}
+		c.client = &http.Client{Transport: &http.Transport{TLSClientConfig: tlsConfig}}
 	}
 	return c, nil
 }
