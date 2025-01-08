@@ -7,13 +7,13 @@ toolchain go1.23.1
 require (
 	github.com/gogo/protobuf v1.3.2
 	github.com/pkg/errors v0.9.1
-	go.bytebuilders.dev/license-proxyserver v0.0.18
-	go.bytebuilders.dev/license-verifier v0.14.3
-	k8s.io/api v0.30.1
-	k8s.io/apimachinery v0.30.1
-	k8s.io/apiserver v0.30.1
-	k8s.io/client-go v0.30.1
-	k8s.io/klog/v2 v2.120.1
+	go.bytebuilders.dev/license-proxyserver v0.0.19
+	go.bytebuilders.dev/license-verifier v0.14.4
+	k8s.io/api v0.30.2
+	k8s.io/apimachinery v0.30.2
+	k8s.io/apiserver v0.30.2
+	k8s.io/client-go v0.30.2
+	k8s.io/klog/v2 v2.130.1
 	k8s.io/kube-aggregator v0.30.1
 	kmodules.xyz/client-go v0.30.44
 )
@@ -27,7 +27,7 @@ require (
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
-	github.com/go-logr/logr v1.4.1 // indirect
+	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-openapi/jsonpointer v0.20.0 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
@@ -73,7 +73,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240430033511-f0e62f92d13f // indirect
-	k8s.io/utils v0.0.0-20240310230437-4693a0247e57 // indirect
+	k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0 // indirect
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	sigs.k8s.io/controller-runtime v0.18.4 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
