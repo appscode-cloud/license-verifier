@@ -22,6 +22,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	v1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -81,6 +82,11 @@ func (in *License) DeepCopyInto(out *License) {
 	if in.NotAfter != nil {
 		in, out := &in.NotAfter, &out.NotAfter
 		*out = (*in).DeepCopy()
+	}
+	if in.Constraints != nil {
+		in, out := &in.Constraints, &out.Constraints
+		*out = new(v1.JSON)
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }

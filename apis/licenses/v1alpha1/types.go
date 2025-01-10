@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -40,6 +41,9 @@ type License struct {
 	ID           string            `json:"id,omitempty"`        // license ID
 	Status       LicenseStatus     `json:"status"`
 	Reason       string            `json:"reason"`
+	// Constraint holds the custom constraints for this license in json format
+	// +optional
+	Constraints *apiextensionsv1.JSON `json:"constraints,omitempty"`
 }
 
 type User struct {

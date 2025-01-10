@@ -25,6 +25,7 @@ import (
 	"go.bytebuilders.dev/license-verifier/info"
 
 	"github.com/pkg/errors"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
 )
@@ -120,6 +121,11 @@ func ParseLicense(opts ParserOptions) (v1alpha1.License, error) {
 		parts := strings.SplitN(ff, "=", 2)
 		if len(parts) == 2 {
 			license.FeatureFlags[parts[0]] = parts[1]
+		}
+	}
+	if len(cert.Subject.StreetAddress) > 0 {
+		license.Constraints = &apiextensionsv1.JSON{
+			Raw: []byte(cert.Subject.StreetAddress[0]),
 		}
 	}
 
