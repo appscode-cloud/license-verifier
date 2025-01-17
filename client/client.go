@@ -42,9 +42,10 @@ type Client struct {
 	clusterUID string
 	caCert     []byte
 	client     *http.Client
+	userAgent  string
 }
 
-func NewClient(baseURL, token, clusterUID string, caCert []byte, insecureSkipVerifyTLS bool) (*Client, error) {
+func NewClient(baseURL, token, clusterUID string, caCert []byte, insecureSkipVerifyTLS bool, userAgent string) (*Client, error) {
 	u, err := info.LicenseIssuerAPIEndpoint(baseURL)
 	if err != nil {
 		return nil, err
@@ -54,6 +55,7 @@ func NewClient(baseURL, token, clusterUID string, caCert []byte, insecureSkipVer
 		token:      token,
 		clusterUID: clusterUID,
 		client:     http.DefaultClient,
+		userAgent:  userAgent,
 	}
 	if len(caCert) > 0 || insecureSkipVerifyTLS {
 		tlsConfig := &tls.Config{
@@ -87,6 +89,9 @@ func (c *Client) AcquireLicense(features []string) ([]byte, *v1alpha1.Contract, 
 		return nil, nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
+	if c.userAgent != "" {
+		req.Header.Set("User-Agent", c.userAgent)
+	}
 	// add authorization header to the req
 	if c.token != "" {
 		req.Header.Add("Authorization", "Bearer "+c.token)
