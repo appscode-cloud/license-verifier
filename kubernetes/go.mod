@@ -6,7 +6,6 @@ toolchain go1.24.1
 
 require (
 	github.com/gogo/protobuf v1.3.2
-	github.com/pkg/errors v0.9.1
 	go.bytebuilders.dev/license-proxyserver v0.0.20
 	go.bytebuilders.dev/license-verifier v0.14.7
 	k8s.io/api v0.30.2
@@ -49,6 +48,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rancher/norman v0.0.0-20240708202514-a0127673d1b9 // indirect
 	github.com/rancher/rancher/pkg/client v0.0.0-20240710123941-93e332156bbe // indirect
 	github.com/rancher/wrangler/v3 v3.0.0 // indirect

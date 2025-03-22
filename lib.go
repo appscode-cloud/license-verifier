@@ -200,7 +200,7 @@ func VerifyLicense(opts Options) (v1alpha1.License, error) {
 func BadLicense(err error) (v1alpha1.License, error) {
 	if err == nil {
 		// This should never happen
-		panic(err)
+		panic("bad license: expected error")
 	}
 	return v1alpha1.License{
 		TypeMeta: metav1.TypeMeta{
