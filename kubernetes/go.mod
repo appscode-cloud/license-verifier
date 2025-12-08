@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/gogo/protobuf v1.3.2
 	go.bytebuilders.dev/license-proxyserver v0.0.20
-	go.bytebuilders.dev/license-verifier v0.14.9
+	go.bytebuilders.dev/license-verifier v0.14.10
 	k8s.io/api v0.30.2
 	k8s.io/apimachinery v0.30.2
 	k8s.io/apiserver v0.30.2
