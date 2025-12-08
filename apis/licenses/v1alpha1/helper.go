@@ -56,11 +56,12 @@ func (i *License) Less(j *License) bool {
 
 func rankTier(t string) int {
 	// prefer enterprise licenses in a min priority queue
-	if t == "enterprise" {
+	switch t {
+	case "enterprise":
 		return 0
-	} else if t == "" {
+	case "":
 		return 2
-	} else {
+	default:
 		return 1
 	}
 }

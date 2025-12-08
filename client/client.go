@@ -112,7 +112,7 @@ func (c *Client) AcquireLicense(features []string) ([]byte, *v1alpha1.Contract, 
 		}
 		return nil, nil, err
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() // nolint:errcheck
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
