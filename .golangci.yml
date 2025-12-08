@@ -23,6 +23,7 @@ issues:
   exclude-dirs:
     - client
     - vendor
+    - kubernetes/vendor
 
 run:
   timeout: 10m

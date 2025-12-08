@@ -24,6 +24,13 @@ func (l License) EnableClientBilling() bool {
 	return len(l.FeatureFlags) > 0 && l.FeatureFlags[FeatureEnableClientBilling] == "true"
 }
 
+func (l License) ActivationMode() ActivationMode {
+	if l.FeatureFlags[FeatureActivationMode] == string(ActivationModeCertification) {
+		return ActivationModeCertification
+	}
+	return ActivationModeFull
+}
+
 func (i *License) Less(j *License) bool {
 	if i == nil {
 		return true
