@@ -24,6 +24,12 @@ func (l License) EnableClientBilling() bool {
 	return len(l.FeatureFlags) > 0 && l.FeatureFlags[FeatureEnableClientBilling] == "true"
 }
 
+// AllowOffline reports whether the license was issued for an offline
+// (air-gapped) deployment.
+func (l License) AllowOffline() bool {
+	return len(l.FeatureFlags) > 0 && l.FeatureFlags[FeatureAllowOffline] == "true"
+}
+
 func (l License) ActivationMode() ActivationMode {
 	if l.FeatureFlags[FeatureActivationMode] == string(ActivationModeCertification) {
 		return ActivationModeCertification
