@@ -74,6 +74,9 @@ const (
 	FeatureRestrictions        FeatureFlag = "Restrictions"
 	FeatureEnableClientBilling FeatureFlag = "EnableClientBilling"
 	FeatureActivationMode      FeatureFlag = "ActivationMode"
+	// FeatureAllowOffline marks a license that was issued for an offline
+	// (air-gapped) deployment. It is set (to "true") only for offline licenses.
+	FeatureAllowOffline FeatureFlag = "AllowOffline"
 )
 
 // +kubebuilder:validation:Enum=full;certification
@@ -84,7 +87,7 @@ const (
 	ActivationModeCertification ActivationMode = "certification"
 )
 
-var knownFlags = sets.New[FeatureFlag](FeatureDisableAnalytics, FeatureRestrictions, FeatureEnableClientBilling, FeatureActivationMode)
+var knownFlags = sets.New[FeatureFlag](FeatureDisableAnalytics, FeatureRestrictions, FeatureEnableClientBilling, FeatureActivationMode, FeatureAllowOffline)
 
 type FeatureFlags map[FeatureFlag]string
 
