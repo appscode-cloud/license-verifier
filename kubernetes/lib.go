@@ -417,7 +417,8 @@ func LicenseProvidedForClient(client discovery.DiscoveryInterface, licenseFile s
 		ok, _ := disco.HasGVK(
 			client,
 			proxyserver.SchemeGroupVersion.String(),
-			proxyserver.ResourceKindLicenseRequest)
+			proxyserver.ResourceKindLicenseRequest,
+		)
 		return ok
 	}
 	return false
