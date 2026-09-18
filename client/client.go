@@ -54,6 +54,7 @@ func NewClient(baseURL, token, clusterUID string, caCert []byte, insecureSkipVer
 		url:        u,
 		token:      token,
 		clusterUID: clusterUID,
+		caCert:     caCert,
 		client:     http.DefaultClient,
 		userAgent:  userAgent,
 	}
@@ -63,7 +64,9 @@ func NewClient(baseURL, token, clusterUID string, caCert []byte, insecureSkipVer
 		}
 		if len(c.caCert) > 0 {
 			caCertPool := x509.NewCertPool()
-			caCertPool.AppendCertsFromPEM(caCert)
+			if !caCertPool.AppendCertsFromPEM(c.caCert) {
+				return nil, errors.New("no valid certificate found in caCert")
+			}
 			tlsConfig.RootCAs = caCertPool
 		}
 		c.client = &http.Client{Transport: &http.Transport{TLSClientConfig: tlsConfig}}
