@@ -30,6 +30,14 @@ func (l License) AllowOffline() bool {
 	return len(l.FeatureFlags) > 0 && l.FeatureFlags[FeatureAllowOffline] == "true"
 }
 
+// PassthroughLicenseAllowed reports whether the contract behind this license permits
+// passthrough licensing, and whether the license carries the flag at all. A license issued
+// before the flag existed reports known=false, and callers must not read that as a denial.
+func (l License) PassthroughLicenseAllowed() (allowed, known bool) {
+	v, ok := l.FeatureFlags[FeaturePassthroughLicenseAllowed]
+	return v == "true", ok
+}
+
 func (l License) ActivationMode() ActivationMode {
 	if l.FeatureFlags[FeatureActivationMode] == string(ActivationModeCertification) {
 		return ActivationModeCertification

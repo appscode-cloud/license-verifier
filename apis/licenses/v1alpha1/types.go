@@ -77,6 +77,11 @@ const (
 	// FeatureAllowOffline marks a license that was issued for an offline
 	// (air-gapped) deployment. It is set (to "true") only for offline licenses.
 	FeatureAllowOffline FeatureFlag = "AllowOffline"
+	// FeaturePassthroughLicenseAllowed reports whether the contract behind this license
+	// permits drawing licenses on behalf of a tenant org of a selfhosted platform. Unlike
+	// the other flags it is always written, as "true" or "false", so a consumer can tell a
+	// denial apart from a license issued before the flag existed.
+	FeaturePassthroughLicenseAllowed FeatureFlag = "PassthroughLicenseAllowed"
 )
 
 // +kubebuilder:validation:Enum=full;certification
@@ -87,7 +92,7 @@ const (
 	ActivationModeCertification ActivationMode = "certification"
 )
 
-var knownFlags = sets.New[FeatureFlag](FeatureDisableAnalytics, FeatureRestrictions, FeatureEnableClientBilling, FeatureActivationMode, FeatureAllowOffline)
+var knownFlags = sets.New[FeatureFlag](FeatureDisableAnalytics, FeatureRestrictions, FeatureEnableClientBilling, FeatureActivationMode, FeatureAllowOffline, FeaturePassthroughLicenseAllowed)
 
 type FeatureFlags map[FeatureFlag]string
 
